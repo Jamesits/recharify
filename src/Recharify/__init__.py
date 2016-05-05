@@ -50,9 +50,14 @@ class GUI:
 
         self.logger.info("[GUI] yielding event control to Qt")
         ret = self.app.exec_()
-        self.logger.debug("[GUI] Qt event loop quit: {}".format(ret))
         if ret:
             return ret
+
+        we.show()
+        ret = self.app.exec_()
+        if ret:
+            return ret
+
         mc.main.show()
         ret = mc.exec_()
         return ret
