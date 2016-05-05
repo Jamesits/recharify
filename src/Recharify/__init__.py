@@ -30,17 +30,12 @@ class GUI:
             import time
             for i in range(5000):
                 time.sleep(.001)
-                #self.app.processEvents()
+                sp.progress_change(i / 50)
             self.logger.info("t finished")
-            # sp.close()
+            sp.close()
 
-        @pyqtSlot()
-        def addfunc():
-            self.logger.info("Adding func")
-            self.dispatcher.add_func(t)
+        self.dispatcher.add_func(t)
 
-
-        sp.loaded.connect(addfunc)
         sp.show()
         self.logger.info("Qt now handling events")
         return self.app.exec_()
