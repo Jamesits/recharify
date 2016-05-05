@@ -9,14 +9,15 @@ import time
 class PQDispatcher(QThread):
     def __init__(self):
         """
+        Initialize everything
         """
         self.logger = MyLogger("PQDispatcher")
         QThread.__init__(self)
         self.syncTasks = []
-        self.threadPool = Pool(processes=2)
-        self.threads = []
+        # self.threadPool = Pool(processes=2)
+        # self.threads = []
         self.isExecuting = False
-        self.timer = QTimer()
+        # self.timer = QTimer()
         self.stop = False
 
     def __del__(self):

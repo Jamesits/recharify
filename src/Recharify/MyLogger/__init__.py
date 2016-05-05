@@ -6,6 +6,9 @@ import logging
 # logging.basicConfig(format=FORMAT)
 
 class MyLogger(logging.Logger):
+    """
+    A logging.Logger with different default options.
+    """
     def __init__(self, name, level=logging.INFO):
         super().__init__(name, level)
         super().addHandler(logging.StreamHandler())

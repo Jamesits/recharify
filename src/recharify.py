@@ -7,4 +7,5 @@ import Recharify
 import sys
 
 if __name__ == "__main__":
+    # Start application
     sys.exit(Recharify.App().run())

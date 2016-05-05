@@ -19,6 +19,11 @@ class GUI:
         self.dispatcher = PQDispatcher()
 
     def main_loop(self):
+        """
+        Handle GUI things before enterint Qt event loop
+
+        :return: Qt return value
+        """
         self.logger.info("[GUI] GUI initializating")
         self.dispatcher.start()
 
@@ -26,6 +31,10 @@ class GUI:
         sp = SplashScreen.SplashScreen()
 
         def call_init():
+            """
+            Call App.init() and update progress bar. Should be run async in ParallelQt.PQDispatcher.
+            :return: None
+            """
             for p in App.init():
                 sp.progress_change(p)
             sp.close()
@@ -42,11 +51,21 @@ class App:
 
     @staticmethod
     def run():
+        """
+        Bootstrap function.
+
+        :return: Qt return value
+        """
         App.logger.info("[App] Application started")
         return GUI().main_loop()
 
     @staticmethod
     def init():
+        """
+        Initialize the application.
+
+        :return: yield a progress value between 0-100 to update progress bar
+        """
         App.logger.info("[App] initialization started")
         import time
         for i in range(5000):

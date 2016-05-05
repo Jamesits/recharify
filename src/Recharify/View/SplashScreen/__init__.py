@@ -5,6 +5,9 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 
 class SplashScreen(QWidget):
+    """
+    A splash screen window with an image, a textbox for current status, and a progress bar.
+    """
 
     def __init__(self):
         super().__init__()
