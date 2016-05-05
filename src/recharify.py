@@ -4,7 +4,7 @@
 # Copyright (c) 2016 James Swineson. All rights reserved.
 
 import Recharify
+import sys
 
 if __name__ == "__main__":
-    app = Recharify.App()
-    app.run()
+    sys.exit(Recharify.App().run())
