@@ -3,7 +3,7 @@
 import sys
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QThread, QTimer
 from PyQt5.QtWidgets import QApplication
-from Recharify.View import SplashScreen
+from Recharify.View import SplashScreen, WelcomeWindow, MainWindow
 import gettext
 from Recharify.ParallelQt import PQDispatcher
 from Recharify.MyLogger import MyLogger
@@ -29,6 +29,8 @@ class GUI:
 
         # display splash screen
         sp = SplashScreen.SplashScreen()
+        we = WelcomeWindow.WelcomeWindow()
+        mc = MainWindow.MainController([])
 
         def call_init():
             """
@@ -37,13 +39,23 @@ class GUI:
             """
             for p in App.init():
                 sp.progress_change(p)
+
             sp.close()
 
-        self.dispatcher.add_func(call_init)
+            # mc.exec_()
+            #mc.main.show()
 
         sp.show()
+        self.dispatcher.add_func(call_init)
+
         self.logger.info("[GUI] yielding event control to Qt")
-        return self.app.exec_()
+        ret = self.app.exec_()
+        self.logger.debug("[GUI] Qt event loop quit: {}".format(ret))
+        if ret:
+            return ret
+        mc.main.show()
+        ret = mc.exec_()
+        return ret
 
 
 class App:
