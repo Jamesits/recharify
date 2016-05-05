@@ -25,16 +25,12 @@ class GUI:
         # display splash screen
         sp = SplashScreen.SplashScreen()
 
-        def t():
-            self.logger.info("t started")
-            import time
-            for i in range(5000):
-                time.sleep(.001)
-                sp.progress_change(i / 50)
-            self.logger.info("t finished")
+        def call_init():
+            for p in App.init():
+                sp.progress_change(p)
             sp.close()
 
-        self.dispatcher.add_func(t)
+        self.dispatcher.add_func(call_init)
 
         sp.show()
         self.logger.info("Qt now handling events")
@@ -42,9 +38,19 @@ class GUI:
 
 
 class App:
-    def __init__(self):
-        self.logger = MyLogger("App")
+    logger = MyLogger("App")
 
-    def run(self):
-        self.logger.info("Event: App.run()")
+    @staticmethod
+    def run():
+        App.logger.info("Event: App.run()")
         return GUI().main_loop()
+
+    @staticmethod
+    def init():
+        App.logger.info("background initialization started")
+        import time
+        for i in range(5000):
+            time.sleep(.001)
+            yield i / 50
+        App.logger.info("background initialization finished")
+        yield 100
