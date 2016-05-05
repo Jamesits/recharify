@@ -16,13 +16,13 @@ class PQDispatcher(QThread):
         self.threadPool = Pool(processes=2)
         self.threads = []
         self.isExecuting = False
-        self.logger.info("Dispatcher initialized")
         self.timer = QTimer()
         self.stop = False
 
     def __del__(self):
+        self.stop = True
         self.wait()
-        self.logger.info("Dispatcher quit")
+        self.logger.info("[ParallelQt] Dispatcher quit")
 
     def _next_sync_task(self):
         """
@@ -30,23 +30,26 @@ class PQDispatcher(QThread):
 
         """
         if self.isExecuting or len(self.syncTasks) == 0:
-            self.logger.info("Dispatcher awaiting")
             return
-        self.logger.info("Dispatcher executing next function")
         self.isExecuting = True
 
         def onFinish(_=None):
-            self.logger.info("Task finished")
+            self.logger.info("[ParallelQt] Function returned")
             self.isExecuting = False
 
-        self.logger.info("Dispatcher started function")
+        self.logger.info("[ParallelQt] Dispatcher executing next task")
         self.syncTasks.pop(0)(); onFinish()
         # self.threadPool.apply_async(self.syncTasks.pop(0), callback=onFinish)
-        self.logger.info("Dispatcher returned")
 
     def add_func(self, func):
+        """
+        Add function as next background task.
+
+        :param func: The function to be added
+        :return: None
+        """
         self.syncTasks.append(func)
-        self.logger.info("Dispatcher added a function")
+        self.logger.info("[ParallelQt] New task added")
 
     def run(self):
         """
@@ -54,8 +57,6 @@ class PQDispatcher(QThread):
 
         """
         while not self.stop:
-            self.logger.info("Checking unfinished tasks")
             self._next_sync_task()
             time.sleep(1)
 
-        # self.timer.singleShot(1, self.start)

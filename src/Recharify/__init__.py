@@ -19,7 +19,7 @@ class GUI:
         self.dispatcher = PQDispatcher()
 
     def main_loop(self):
-        self.logger.info("Main loop started")
+        self.logger.info("[GUI] GUI initializating")
         self.dispatcher.start()
 
         # display splash screen
@@ -33,7 +33,7 @@ class GUI:
         self.dispatcher.add_func(call_init)
 
         sp.show()
-        self.logger.info("Qt now handling events")
+        self.logger.info("[GUI] yielding event control to Qt")
         return self.app.exec_()
 
 
@@ -42,15 +42,15 @@ class App:
 
     @staticmethod
     def run():
-        App.logger.info("Event: App.run()")
+        App.logger.info("[App] Application started")
         return GUI().main_loop()
 
     @staticmethod
     def init():
-        App.logger.info("background initialization started")
+        App.logger.info("[App] initialization started")
         import time
         for i in range(5000):
             time.sleep(.001)
             yield i / 50
-        App.logger.info("background initialization finished")
+        App.logger.info("[App] initialization finished")
         yield 100
