@@ -10,7 +10,8 @@ gettext.translation('Recharify', localedir='resources/locale/', languages=['zh_C
 
 
 class App:
-    def run(self):
+    @staticmethod
+    def run():
         app = QApplication(sys.argv)
         sp = SplashScreen.SplashScreen()
         sp.show()
