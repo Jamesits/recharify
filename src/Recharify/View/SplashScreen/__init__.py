@@ -7,7 +7,9 @@ class SplashScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(_('Recharify'))
-        QLabel(_('Recharify'), self).move(15, 10)
+        QLabel(_('Loading splash screen image...'), self).move(15, 10)
+        self.progress = QtGui.QProgressBar(self)
+        self.progress.setGeometry(200, 80, 250, 20)
         self.setGeometry(300, 300, 250, 150)
         self.movetocenter()
 
