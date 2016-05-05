@@ -2,43 +2,47 @@
 import asyncio
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QTimer
 from Recharify.MyLogger import MyLogger
+from multiprocessing import Pool
+import time
+
 
 class PQDispatcher(QThread):
     def __init__(self):
         """
-        Make a new thread instance with the specified
-        subreddits as the first argument. The subreddits argument
-        will be stored in an instance variable called subreddits
-        which then can be accessed by all other class instance functions
-
-        :param subreddits: A list of subreddit names
-        :type subreddits: list
         """
         self.logger = MyLogger("PQDispatcher")
         QThread.__init__(self)
         self.syncTasks = []
-        self.threadPool = []
+        self.threadPool = Pool(processes=2)
+        self.threads = []
         self.isExecuting = False
         self.logger.info("Dispatcher initialized")
+        self.timer = QTimer()
+        self.stop = False
 
     def __del__(self):
         self.wait()
         self.logger.info("Dispatcher quit")
 
-    async def _next_sync_task(self):
+    def _next_sync_task(self):
         """
         Run next sync task in list and return the return value.
 
-        :return: Return value of that task.
-        :rtype: any
         """
-        if self.isExecuting:
+        if self.isExecuting or len(self.syncTasks) == 0:
+            self.logger.info("Dispatcher awaiting")
             return
-        self.logger.info("Dispatcher executing next func")
+        self.logger.info("Dispatcher executing next function")
         self.isExecuting = True
-        ret = await self.synctasks.pop(0)()
-        self.isExecuting = False
-        return ret
+
+        def onFinish(_=None):
+            self.logger.info("Task finished")
+            self.isExecuting = False
+
+        self.logger.info("Dispatcher started function")
+        self.syncTasks.pop(0)(); onFinish()
+        # self.threadPool.apply_async(self.syncTasks.pop(0), callback=onFinish)
+        self.logger.info("Dispatcher returned")
 
     def add_func(self, func):
         self.syncTasks.append(func)
@@ -49,7 +53,9 @@ class PQDispatcher(QThread):
         Start queue dispatcher
 
         """
-        try:
+        while not self.stop:
+            self.logger.info("Checking unfinished tasks")
             self._next_sync_task()
-        finally:
-            QTimer.singleShot(10000, self.run)
+            time.sleep(1)
+
+        # self.timer.singleShot(1, self.start)

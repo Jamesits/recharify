@@ -19,7 +19,7 @@ class GUI:
         self.dispatcher = PQDispatcher()
 
     def main_loop(self):
-        self.logger.info("Main loop stared")
+        self.logger.info("Main loop started")
         self.dispatcher.start()
 
         # display splash screen
@@ -30,7 +30,7 @@ class GUI:
             import time
             for i in range(5000):
                 time.sleep(.001)
-                self.app.processEvents()
+                #self.app.processEvents()
             self.logger.info("t finished")
             # sp.close()
 
@@ -40,8 +40,9 @@ class GUI:
             self.dispatcher.add_func(t)
 
 
-        sp.loaded.connect(t)
+        sp.loaded.connect(addfunc)
         sp.show()
+        self.logger.info("Qt now handling events")
         return self.app.exec_()
 
 
