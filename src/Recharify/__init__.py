@@ -43,7 +43,7 @@ class GUI:
             sp.close()
 
             # mc.exec_()
-            #mc.main.show()
+            # mc.main.show()
 
         sp.show()
         self.dispatcher.add_func(call_init)

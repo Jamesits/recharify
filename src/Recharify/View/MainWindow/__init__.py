@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from PyQt5.QtWidgets import QWidget, QLabel, QDesktopWidget, QProgressBar, QApplication, QMainWindow, QPushButton
-from PyQt5.QtCore import Qt, pyqtSignal, QRect
+from PyQt5.QtCore import Qt, pyqtSignal, QRect, QUrl
+from PyQt5.QtQuick import QQuickView
 
 
 
