@@ -60,6 +60,8 @@ class GUI:
 
         mc.main.show()
         ret = mc.exec_()
+        self.dispatcher.kill()
+        self.dispatcher.quit()
         return ret
 
 

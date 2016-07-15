@@ -21,16 +21,23 @@ class PQDispatcher(QThread):
         self.stop = False
 
     def __del__(self):
-        self.stop = True
-        self.wait()
+        self.kill()
+        self.exit()
         self.logger.info("[ParallelQt] Dispatcher quit")
+
+    def kill(self):
+        self.logger.info("[ParallelQt] Dispatcher waiting to quit")
+        self.stop = True
+        while self.isExecuting:
+            self.msleep(1)
+        self.wait()
 
     def _next_sync_task(self):
         """
         Run next sync task in list and return the return value.
 
         """
-        if self.isExecuting or len(self.syncTasks) == 0:
+        if self.isExecuting or self.stop or len(self.syncTasks) == 0:
             return
         self.isExecuting = True
 
@@ -59,5 +66,5 @@ class PQDispatcher(QThread):
         """
         while not self.stop:
             self._next_sync_task()
-            time.sleep(1)
+            self.msleep(1)
 
